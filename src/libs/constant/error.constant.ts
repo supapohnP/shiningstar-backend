@@ -15,12 +15,17 @@ export const ERROR_CODE = {
   },
 
   LOGIN_FAILED: {
-    error_code: 2001,
+    error_code: 3000,
     http_status: HttpStatus.BAD_REQUEST,
     description: 'Login failed',
   },
 
   // User
+  USER_NOT_FOUND: {
+    error_code: 4000,
+    http_status: HttpStatus.BAD_REQUEST,
+    description: 'User not found',
+  },
 
   // Event-listing
 

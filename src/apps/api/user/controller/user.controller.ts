@@ -1,22 +1,16 @@
 import {
-  Body,
   Controller,
-  Delete,
   Get,
   HttpException,
   HttpStatus,
-  Param,
-  Post,
-  Put,
-  Query,
-  Req,
-  UseGuards,
+  Request,
 } from '@nestjs/common';
 
-import { Query as ExpressQuery } from 'express-serve-static-core';
 import { UserService } from 'src/libs/service/user/user.service';
 import { Role } from 'src/libs/constant/user.constant';
 import { Auth } from 'src/libs/service/auth/decorators/auth.decorator';
+import { RequestWithUser } from 'src/libs/service/auth/strategy/jwt.strategy';
+import { ERROR_CODE } from 'src/libs/constant/error.constant';
 
 @Controller('users')
 export class UserController {
@@ -24,19 +18,19 @@ export class UserController {
     private userService: UserService,
   ) { }
 
-  @Get()
-  @Auth(Role.admin)
-  async getAllUsers(
-    @Query() query: ExpressQuery
+  @Get('/me')
+  @Auth(Role.user)
+  async getUserMe(
+    @Request() req: RequestWithUser,
   ): Promise<any> {
-    const users = await this.userService.findAll(query);
+    const users = await this.userService.getUserMe(req.user._id);
     if (!users) {
-      throw new HttpException(
-        'USERS_NOT_FOUND',
-        HttpStatus.NOT_FOUND,
-      );
+      // throw new HttpException(
+      //   'USER_NOT_FOUND',
+      //   HttpStatus.NOT_FOUND,
+      // );
+      return ERROR_CODE.USER_NOT_FOUND;
     }
-
     return { success: true, users };
   }
 }
