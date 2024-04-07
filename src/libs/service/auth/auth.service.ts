@@ -19,18 +19,16 @@ export class AuthService {
     const existingUser = this.userModel.findOne({
       email: email,
     });
-    console.log('check existingUser', existingUser);
-    // if (existingUser) {
-    //   // throw new BadRequestException('Email already exists');
-    //   return ERROR_CODE.REGISTER_FAILED;
-    // }
+    if (existingUser) {
+      // throw new BadRequestException('Email already exists');
+      return ERROR_CODE.REGISTER_FAILED;
+    }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.userModel.create({
       email,
       password: hashedPassword,
     });
     const token = this.jwtService.sign({ id: user._id });
-    console.log('check token', token)
     const userRegister = await this.userModel.findOneAndUpdate(
       { email: email },
       { access_token: token },
@@ -39,8 +37,7 @@ export class AuthService {
   }
 
   async login(email: string, password: string) {
-    const user = await this.userModel.findOne({ email });
-    console.log('check user', user)
+    const user = await this.userModel.findOne({ email }).select('+password');
     if (!user) {
       throw new UnauthorizedException('Invalid email or password');
     }
@@ -52,39 +49,8 @@ export class AuthService {
     const userLogin = await this.userModel.findOneAndUpdate(
       { email: email },
       { access_token: token },
+      { new: true },
     );
     return { success: true, user: userLogin };
   }
-
-  // async validateUser(email: string, password: string): Promise<User> {
-  //   const user: User = await this.userModel.findOne({
-  //     email: email,
-  //   });
-  //   if (!user) {
-  //     throw new BadRequestException('User not found');
-  //   }
-  //   const isMatch: boolean = bcrypt.compareSync(password, user.password);
-  //   if (!isMatch) {
-  //     throw new BadRequestException('Password does not match');
-  //   }
-  //   return user;
-  // }
-
-  // async login(user: { email: string, password: string }): Promise<AccessToken> {
-  //   const payload = { email: user.email };
-  //   return { access_token: this.jwtService.sign(payload) };
-  // }
-
-  // async register(user: RegisterRequestDto): Promise<AccessToken> {
-  //   const existingUser = this.userModel.findOne({
-  //     email: user.email,
-  //   });
-  //   if (existingUser) {
-  //     throw new BadRequestException('email already exists');
-  //   }
-  //   const hashedPassword = await bcrypt.hash(user.password, 10);
-  //   const newUser = { ...user, password: hashedPassword };
-  //   await this.userModel.create(newUser);
-  //   return this.login(newUser);
-  // }
 }

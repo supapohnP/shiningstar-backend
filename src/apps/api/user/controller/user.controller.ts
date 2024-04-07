@@ -1,8 +1,6 @@
 import {
   Controller,
   Get,
-  HttpException,
-  HttpStatus,
   Request,
 } from '@nestjs/common';
 
@@ -25,10 +23,6 @@ export class UserController {
   ): Promise<any> {
     const users = await this.userService.getUserMe(req.user._id);
     if (!users) {
-      // throw new HttpException(
-      //   'USER_NOT_FOUND',
-      //   HttpStatus.NOT_FOUND,
-      // );
       return ERROR_CODE.USER_NOT_FOUND;
     }
     return { success: true, users };
