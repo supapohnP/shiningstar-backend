@@ -21,7 +21,7 @@ export class AuthService {
     });
     if (existingUser) {
       // throw new BadRequestException('Email already exists');
-      return ERROR_CODE.REGISTER_FAILED;
+      return ERROR_CODE.DUPLICATE_EMAIL;
     }
     const hashedPassword = await bcrypt.hash(password, 10);
     const user = await this.userModel.create({

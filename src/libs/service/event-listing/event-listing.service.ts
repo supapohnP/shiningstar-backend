@@ -1,4 +1,6 @@
 import {
+  CACHE_MANAGER,
+  Inject,
   Injectable,
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
@@ -6,12 +8,15 @@ import * as mongoose from 'mongoose';
 
 import { EventListing } from 'src/libs/database/event-listing/event-listing.schema';
 import { CreateEventListingDTO } from 'src/libs/dto/event-listing.dto';
+import { Cache } from 'cache-manager';
+
 
 @Injectable()
 export class EventListingService {
   constructor(
     @InjectModel(EventListing.name)
     private eventListingModel: mongoose.Model<EventListing>,
+    @Inject(CACHE_MANAGER) private cacheService: Cache,
   ) { }
 
   async getAllEventListings(): Promise<EventListing[]> {
@@ -20,7 +25,7 @@ export class EventListingService {
   }
 
   async getEventListingById(eventId: string): Promise<EventListing | any> {
-    const eventListings = await this.eventListingModel.find({ _id: eventId });
+    const eventListings = await this.eventListingModel.findOne({ _id: eventId });
     return eventListings;
   }
 

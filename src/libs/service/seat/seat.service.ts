@@ -3,8 +3,9 @@ import {
 } from '@nestjs/common';
 import { InjectModel } from '@nestjs/mongoose';
 import * as mongoose from 'mongoose';
+import { SeatStatus } from 'src/libs/constant/seat.constant';
 import { Seat, SeatDocument } from 'src/libs/database/seat/seat.schema';
-import { CreateSeatDTO, SeatDTO } from 'src/libs/dto/seat.dto';
+import { SeatDTO } from 'src/libs/dto/seat.dto';
 
 @Injectable()
 export class SeatService {
@@ -18,9 +19,13 @@ export class SeatService {
     return seats;
   }
 
-  async getSeatById(seatId: string): Promise<Seat | any> {
-    const eventListings = await this.seatModel.find({ _id: seatId });
-    return eventListings;
+  async getSeatAvailableById(seatId: string): Promise<Seat | any> {
+    const seat = await this.seatModel
+      .find({
+        _id: seatId,
+        seat_status: SeatStatus.available,
+      });
+    return seat;
   }
 
   async createSeats(dataToCreate: SeatDocument[]) {

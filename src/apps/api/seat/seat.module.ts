@@ -17,6 +17,7 @@ import { SeatController } from './controller/seat.controller';
     SeatService,
   ],
   exports: [
+    SeatService,
   ],
 })
 export class SeatModule { }

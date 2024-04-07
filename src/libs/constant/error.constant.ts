@@ -10,13 +10,18 @@ export const ERROR_CODE = {
   // Auth
   REGISTER_FAILED: {
     error_code: 2000,
-    http_status: HttpStatus.BAD_REQUEST,
-    description: 'Can not Register, Email already exists',
+    http_status: HttpStatus.UNAUTHORIZED,
+    description: 'Can not Register',
+  },
+  DUPLICATE_EMAIL: {
+    error_code: 2001,
+    http_status: HttpStatus.PRECONDITION_FAILED,
+    dev_description: 'Duplicate Email',
   },
 
   LOGIN_FAILED: {
     error_code: 3000,
-    http_status: HttpStatus.BAD_REQUEST,
+    http_status: HttpStatus.UNAUTHORIZED,
     description: 'Login failed',
   },
 
@@ -60,7 +65,27 @@ export const ERROR_CODE = {
     http_status: HttpStatus.BAD_REQUEST,
     description: 'Seat can not update',
   },
+  SEAT_NOT_AVAILABLE: {
+    error_code: 6002,
+    http_status: HttpStatus.INTERNAL_SERVER_ERROR,
+    description: 'Seat not available',
+  },
 
   // Reservation
+  RESERVATION_NOT_FOUND: {
+    error_code: 7000,
+    http_status: HttpStatus.NOT_FOUND,
+    description: 'Reservation not found',
+  },
+  RESERVATION_CAN_NOT_CREATE: {
+    error_code: 7001,
+    http_status: HttpStatus.BAD_REQUEST,
+    description: 'Reservation can not create',
+  },
+  RESERVATION_CAN_NOT_UPDATE: {
+    error_code: 7002,
+    http_status: HttpStatus.BAD_REQUEST,
+    description: 'Reservation can not update',
+  },
 
 } as const;

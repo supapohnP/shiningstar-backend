@@ -26,7 +26,6 @@ export class SeatController {
   @Post()
   @Auth(Role.admin)
   async createSeats(
-    @Param() id: string,
     @Body(new JoiValidationPipe(createSeatValidationBody))
     body: CreateSeatDTO
   ): Promise<any> {
@@ -66,9 +65,9 @@ export class SeatController {
   @Get('/:id')
   @Auth(Role.admin, Role.user)
   async getSeatById(
-    @Param() id: string,
+    @Param('id') id: string,
   ): Promise<any> {
-    const seat = await this.seatService.getSeatById(id);
+    const seat = await this.seatService.getSeatAvailableById(id);
     if (!seat) {
       return ERROR_CODE.SEAT_NOT_FOUND;
     }
@@ -78,7 +77,7 @@ export class SeatController {
   @Put('/:id')
   @Auth(Role.admin)
   async editSeatById(
-    @Param() id: string,
+    @Param('id') id: string,
     @Body(new JoiValidationPipe(editSeatValidationBody))
     body: SeatDTO
   ): Promise<any> {
@@ -92,7 +91,7 @@ export class SeatController {
   @Delete('/:id')
   @Auth(Role.admin)
   async deleteSeatById(
-    @Param() id: string,
+    @Param('id') id: string,
   ): Promise<any> {
     const seat = await this.seatService.deleteSeatById(id);
     if (!seat) {

@@ -15,8 +15,6 @@ export class AuthController {
   async register(
     @Body(new JoiValidationPipe(registerValidationBody)) registerRequestDto: RegisterRequestDto
   ) {
-    console.log('## register')
-    console.log('body', registerRequestDto);
     const {
       email,
       password
@@ -31,17 +29,10 @@ export class AuthController {
     return userRegister;
   }
 
-  @Get('/test')
-  async test() {
-    console.log('## test');
-    return { success: true };
-  }
-
   @Get('/login')
   async login(
     @Body() loginRequestDTO: LoginRequestDTO
   ) {
-    console.log('### login')
     const { email, password } = loginRequestDTO;
     const user = await this.authService.login(email, password);
     if (!user) {
